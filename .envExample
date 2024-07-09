@@ -6,3 +6,5 @@ DB_USER=""
 DB_PASSWORD=""
 MODEL_ID = "sentence-transformers/all-MiniLM-L6-v2" #use this model (copy exact same model)
 HC_TOKEN = "xxxxxx"
+GEMINI_PROJECT_ID="your_google_cloud_project_id"
+GEMINI_LOCATION="us-central1"

@@ -33,6 +33,8 @@ This application allows users to interactively chat with content extracted from 
     DB_PASSWORD="1234"
     MODEL_ID="sentence-transformers/all-MiniLM-L6-v2"
     HC_TOKEN="xxxxxx"
+    GEMINI_PROJECT_ID="your_google_cloud_project_id"
+    GEMINI_LOCATION="us-central1"
     ```
 
 4. **Install `pgvector` Extension**
