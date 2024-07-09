@@ -1,3 +1,7 @@
+"""
+© 2024 Nirnajan Shrestha. All rights reserved.
+"""
+
 import requests
 import psycopg2
 import os

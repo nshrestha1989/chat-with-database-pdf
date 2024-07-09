@@ -1,3 +1,8 @@
+"""
+© 2024 Nirnajan Shrestha. All rights reserved.
+"""
+
+
 import psycopg2
 import os
 from dotenv import load_dotenv, find_dotenv

@@ -1,3 +1,8 @@
+"""
+© 2024 Nirnajan Shrestha. All rights reserved.
+"""
+
+
 css = '''
 <style>
 .chat-message {
