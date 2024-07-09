@@ -13,8 +13,8 @@ This application allows users to interactively chat with content extracted from 
 
 1. **Clone the Repository**
     ```sh
-    git clone <repository-url>
-    cd <repository-directory>
+    git clone https://github.com/nshrestha1989/chat-with-database-pdf.git
+    cd chat-with-database-pdf
     ```
 
 2. **Install Dependencies**
