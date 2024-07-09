@@ -1,27 +1,185 @@
-Follow this to install pgvector in you local computer:
-https://github.com/pgvector/pgvector
+### README for Streamlit PDF Chat Application
 
-run command as Admin
+#### Overview
 
-python version 3.9
+This application allows users to interactively chat with content extracted from multiple PDF documents. Users can upload their PDF files, which the application processes to extract text and generate responses based on user queries.
+
+#### Features
+
+- Upload and process multiple PDF documents.
+- Extract text from PDFs and embed them using machine learning models.
+- Store embeddings in a PostgreSQL database.
+- Generate conversational responses using embedded document content.
+- Display chat history interactively.
+
+#### Setup
+
+1. **Clone the Repository**
+
+   ```sh
+   git clone <repository-url>
+   cd <repository-directory>
+   ```
+
+2. **Install Dependencies**
+
+   ```sh
+   pip install -r requirements.txt
+   ```
+
+3. **Environment Variables**
+
+   - Rename `.envExample` to `.env` in the project root.
+   - Add the following variables to the `.env` file:
+
+   ```sh
+   DB_HOST="localhost"
+   DB_PORT="5432"
+   DB_NAME="AIData"
+   DB_USER="postgres"
+   DB_PASSWORD="1234"
+   MODEL_ID="sentence-transformers/all-MiniLM-L6-v2"
+   HC_TOKEN="xxxxxx"
+   ```
+
+4. **Install `pgvector` Extension**
+   Follow the instructions to install `pgvector` in your local PostgreSQL setup:
+   [pgvector GitHub Repository](https://github.com/pgvector/pgvector)
+
+   To install `pgvector` on your local computer:
+
+   - **macOS**:
+
+     ```sh
+     brew install pgvector/tap/pgvector
+     ```
+
+   - **Linux**:
+
+     ```sh
+     # Clone the repository
+     git clone https://github.com/pgvector/pgvector.git
+     cd pgvector
+
+     # Make and install
+     make
+     sudo make install
+     ```
+
+   - **Windows**:
+     Follow the detailed guide on the [pgvector GitHub page](https://github.com/pgvector/pgvector).
+
+   - **Enable pgvector in PostgreSQL**:
+     ```sh
+     psql -d mydatabase -c "CREATE EXTENSION vector;"
+     ```
+
+5. **Run the Application**
+   ```sh
+   streamlit run app.py
+   ```
+
+#### Requirements
+
+The required libraries and their versions are listed in `requirements.txt`:
+
+```
+langchain==0.0.184
+PyPDF2==3.0.1
+python-dotenv==1.0.0
+streamlit==1.18.1
+openai==0.27.6
+htmltemplate
+InstructorEmbedding==1.0.1
+sentence-transformers==2.2.2
+altair==4
+```
+
+To install the dependencies, run:
+
+```sh
 pip install -r requirements.txt
-streamlit run app.py
+```
 
-#rename .evnExample to .env and fill in credentials
+**Python Version**: Ensure you are using Python 3.9
 
-#huggginface api
+#### Usage
 
-its using huggingface api , use MODEL_ID = "sentence-transformers/all-MiniLM-L6-v2" in .env file
-generate token from huggingface  HC_TOKEN =xxxhuggingface-tokenxxx
+1. **Upload PDFs**
 
-.env example
+   - In the sidebar, click "Upload your PDFs here and click on 'Process'".
+   - Select one or more PDF files to upload.
+   - Click the "Process" button to extract and embed text from the PDFs.
+
+2. **Ask Questions**
+
+   - Enter your question in the text input field at the top of the page.
+   - The application will display responses generated based on the content of the uploaded PDFs.
+
+3. **View Chat History**
+   - The chat history is displayed interactively, showing the user’s questions and the system’s responses.
+
+#### Hugging Face API
+
+- This application uses Hugging Face's API to generate embeddings.
+- Set `MODEL_ID="sentence-transformers/all-MiniLM-L6-v2"` in your `.env` file.
+- Generate a Hugging Face token and set `HC_TOKEN="your_huggingface_token"` in your `.env` file.
+
+#### .env Example
+
+Here's an example `.env` file:
+
+```
 DB_HOST="localhost"
 DB_PORT="5432"
 DB_NAME="AIData"
 DB_USER="postgres"
 DB_PASSWORD="1234"
-MODEL_ID = "sentence-transformers/all-MiniLM-L6-v2"
-HC_TOKEN = "xxxxxx"
+MODEL_ID="sentence-transformers/all-MiniLM-L6-v2"
+HC_TOKEN="xxxxxx"
+```
+
+#### Code Structure
+
+- **app.py**: Main application file to run the Streamlit app.
+- **embeddingandInsert.py**: Contains functions to extract text from PDFs, generate embeddings, and insert them into the PostgreSQL database.
+- **responseGeneration.py**: Handles the generation of responses based on user input by querying the database and using machine learning models.
+
+#### Functions
+
+- **handle_userinput(user_question)**
+
+  - Processes user input and generates a response based on embedded document content.
+
+- **main()**
+
+  - Sets up the Streamlit application layout, handles file uploads, and processes PDFs.
+
+- **get_pdf_text(pdf_docs)**
+
+  - Extracts text from each page of the uploaded PDFs.
+
+- **extract_text_from_pdf(pdf_docs)**
+
+  - Extracts and returns text content from the uploaded PDF documents.
+
+- **insert_embeddings_into_db(df)**
+
+  - Inserts extracted text and corresponding embeddings into a PostgreSQL database.
+
+- **generate_response(user_input)**
+  - Generates a response based on user input by querying the PostgreSQL database and formatting the retrieved data for response generation.
+
+#### Database Integration
+
+- Uses `psycopg2` to connect and interact with a PostgreSQL database.
+- Stores text content and corresponding embeddings in a table named `embeddings_table`.
+
+#### Troubleshooting
+
+- **Database Connection Issues**: Verify the database credentials in the `.env` file and ensure the database is running.
+- **API Errors**: Ensure the Hugging Face token is valid and has the necessary permissions.
+
+For any issues or contributions, please open an issue or create a pull request on the repository.
 
 
-more documenation coming soon!!!!!
