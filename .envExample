@@ -4,3 +4,5 @@ DB_PORT=""
 DB_NAME=""
 DB_USER=""
 DB_PASSWORD=""
+MODEL_ID = "sentence-transformers/all-MiniLM-L6-v2" #use this model (copy exact same model)
+HC_TOKEN = "xxxxxx"
