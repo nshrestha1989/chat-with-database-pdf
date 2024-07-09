@@ -14,7 +14,7 @@ import vertexai.preview.generative_models as generative_models
 
 import embeddingandInsert
 def generate(messages):
-    vertexai.init(project="mystical-pod-428704-d0", location="us-central1")
+    vertexai.init(project=os.getenv("GEMINI_PROJECT_ID"), location=os.getenv("GEMINI_LOCATION"))
     model = generative_models.GenerativeModel(
         "gemini-1.5-pro-001",
     )
