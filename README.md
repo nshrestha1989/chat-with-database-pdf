@@ -208,6 +208,3 @@ GEMINI_LOCATION="us-central1"
 
 For any issues or contributions, please open an issue or create a pull request on the repository.
 
-#### More Documentation
-
-More documentation and detailed guides will be coming soon! Stay tuned.
