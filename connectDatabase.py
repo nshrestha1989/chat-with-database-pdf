@@ -34,7 +34,7 @@ try:
     """
 
     # Execute the INSERT statement
-    cursor.execute(insert_statement, (user_id, user_name, user_email))
+    cursor.execute(insert_statement)
     db_version = cursor.fetchone()
     print(f"Connected to {db_version}")
 

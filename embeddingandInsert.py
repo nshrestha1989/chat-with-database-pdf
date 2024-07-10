@@ -23,8 +23,13 @@ api_url = f"https://api-inference.huggingface.co/pipeline/feature-extraction/{mo
 headers = {"Authorization": f"Bearer {hf_token}"}
 
 def query(texts):
-    response = requests.post(api_url, headers=headers, json={"inputs": texts, "options": {"wait_for_model": True}})
-    return response.json()
+    try:
+    
+         response = requests.post(api_url, headers=headers, json={"inputs": texts, "options": {"wait_for_model": True}})
+         return response.json()
+    except Exception as error:
+        print("Error embedding data:",error)
+    
 def get_pdf_text(pdf_docs):
     text = ""
     for pdf in pdf_docs:
@@ -89,3 +94,4 @@ def insert_embeddings_into_db(df):
             cursor.close()
         if 'conn' in locals():
             conn.close()
+        return True

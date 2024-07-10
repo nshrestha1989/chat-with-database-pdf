@@ -69,9 +69,11 @@ def main():
                 embeddings = embeddingandInsert.query(raw_texts)
                 
                 df = pd.DataFrame({'text_content': raw_texts, 'embedding': embeddings})
-                embeddingandInsert.insert_embeddings_into_db(df)
-                
-
+                isCompleted = embeddingandInsert.insert_embeddings_into_db(df)
+                if isCompleted:
+                    st.success('Processing complete!')
+                else:
+                    st.error('Processing Error!')
 
 if __name__ == '__main__':
     main()
