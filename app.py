@@ -33,15 +33,17 @@ def handle_userinput(user_question):
 
 def handle_userinput(user_question):
     
+    st.info("We are getting your answer please wait....")
     response_messages = responseGeneration.generate_response(user_question)
     if response_messages:
-        st.write(response_messages)
+        st.write(response_messages)   
     else:
         st.error("Error generating response. Please try again.")
 
 
 def main():
     load_dotenv()
+    embeddingandInsert.create_table_if_not_exists()
     st.set_page_config(page_title="Chat with multiple PDFs",
                        page_icon=":books:")
     st.write(css, unsafe_allow_html=True)
@@ -58,19 +60,26 @@ def main():
 
     with st.sidebar:
         st.subheader("Your documents")
+        
         pdf_docs = st.file_uploader(
             "Upload your PDFs here and click on 'Process'", accept_multiple_files=True)
         if st.button("Process"):
             with st.spinner("Processing"):
                 # get pdf text
-                raw_texts = embeddingandInsert.extract_text_from_pdf(pdf_docs)
-
+                st.info("Extacting pdf data ")
+                text_per_page,pdf_title = embeddingandInsert.extract_text_from_pdf(pdf_docs)
+                st.info("Extacting pdf complete ")
                 # get the text chunks
-                embeddings = embeddingandInsert.query(raw_texts)
+                st.info("Embedding pdf data ")
+                embeddings = embeddingandInsert.query(text_per_page)
+                st.info("Embedding pdf complete ")
+                df = pd.DataFrame({'text_content': text_per_page, 'embedding': embeddings,'document_title':pdf_title})
+                st.info("inserting pdf data into postgres database ")
                 
-                df = pd.DataFrame({'text_content': raw_texts, 'embedding': embeddings})
                 isCompleted = embeddingandInsert.insert_embeddings_into_db(df)
+                
                 if isCompleted:
+                    st.info("inserting pdf data into postgres database complete")
                     st.success('Processing complete!')
                 else:
                     st.error('Processing Error!')

@@ -41,15 +41,54 @@ def get_pdf_text(pdf_docs):
 
 def extract_text_from_pdf(pdf_docs):
     text_per_page = []
+    pdf_title =[]
     for pdf in pdf_docs:
+        
     # Open the provided PDF file
         pdf_reader = PdfReader(pdf)
         # Iterate through each page of the document
         for page in pdf_reader.pages:
+            pdf_title.append(pdf.name)
             page_text = page.extract_text()
             text_per_page.append(page_text)
-        return text_per_page
+    return text_per_page,pdf_title
 
+def create_table_if_not_exists():
+    DB_HOST = os.getenv("DB_HOST")
+    DB_PORT = os.getenv("DB_PORT")
+    DB_NAME = os.getenv("DB_NAME")
+    DB_USER = os.getenv("DB_USER")
+    DB_PASSWORD = os.getenv("DB_PASSWORD")
+
+    # Construct the connection string
+    conn_string = f"host={DB_HOST} port={DB_PORT} dbname={DB_NAME} user={DB_USER} password={DB_PASSWORD}"
+
+    try:
+        # Connect to the PostgreSQL database
+        conn = psycopg2.connect(conn_string)
+    # Create a cursor object using the connection
+        cursor = conn.cursor()
+          # Create table if it doesn't exist
+        create_table_statement = """
+            CREATE TABLE IF NOT EXISTS embeddings_table (
+                text_content text NOT NULL,
+                embedding vector NOT NULL,
+                document_title varchar NOT NULL
+            );
+        """
+        cursor.execute(create_table_statement)
+        conn.commit()
+        print("Sucessfully created table if didnt exists")
+    except psycopg2.Error as e:
+        print(f"Error inserting data into PostgreSQL: {e}")
+
+    finally:
+        # Close cursor and connection
+        if 'cursor' in locals():
+            cursor.close()
+        if 'conn' in locals():
+            conn.close()
+        return True
 
 def insert_embeddings_into_db(df):
     # Retrieve database connection details from environment variables
@@ -68,18 +107,19 @@ def insert_embeddings_into_db(df):
 
         # Create a cursor object using the connection
         cursor = conn.cursor()
-
+ 
         # Example query execution
         insert_statement = """
-        INSERT INTO public.embeddings_table (text_content, embedding)
-        VALUES (%s, %s);
+        INSERT INTO  public.embeddings_table (text_content, embedding,document_title)
+        VALUES (%s, %s,%s);
         """
 
         # Loop through each row in the DataFrame and insert into the database
         for index, row in df.iterrows():
             text_content = row['text_content']
             embedding = row['embedding']
-            cursor.execute(insert_statement, (text_content, Json(embedding)))
+            document_title =row['document_title']
+            cursor.execute(insert_statement, (text_content, Json(embedding),document_title))
 
         # Commit changes to the database
         conn.commit()
