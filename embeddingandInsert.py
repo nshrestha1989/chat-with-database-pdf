@@ -8,7 +8,6 @@ import os
 from dotenv import load_dotenv, find_dotenv
 import pandas as pd
 from psycopg2.extras import Json
-import fitz  # PyMuPDF
 from PyPDF2 import PdfReader
 from sentence_transformers import SentenceTransformer
 
@@ -89,7 +88,39 @@ def create_table_if_not_exists():
         if 'conn' in locals():
             conn.close()
         return True
+def  doc_is_already_processed(document_title):
+    DB_HOST = os.getenv("DB_HOST")
+    DB_PORT = os.getenv("DB_PORT")
+    DB_NAME = os.getenv("DB_NAME")
+    DB_USER = os.getenv("DB_USER")
+    DB_PASSWORD = os.getenv("DB_PASSWORD")
 
+    # Construct the connection string
+    conn_string = f"host={DB_HOST} port={DB_PORT} dbname={DB_NAME} user={DB_USER} password={DB_PASSWORD}"
+
+    try:
+        # Connect to the PostgreSQL database
+        conn = psycopg2.connect(conn_string)
+    # Create a cursor object using the connection
+        cursor = conn.cursor()
+          # Create table if it doesn't exist
+        create_table_statement = """
+            Select * from embeddings_table where document_title ={document_title} LIMIT 1
+            );
+        """
+        cursor.execute(create_table_statement)
+        conn.commit()
+        print("Sucessfully created table if didnt exists")
+    except psycopg2.Error as e:
+        print(f"Error inserting data into PostgreSQL: {e}")
+
+    finally:
+        # Close cursor and connection
+        if 'cursor' in locals():
+            cursor.close()
+        if 'conn' in locals():
+            conn.close()
+        return True
 def insert_embeddings_into_db(df):
     # Retrieve database connection details from environment variables
     DB_HOST = os.getenv("DB_HOST")

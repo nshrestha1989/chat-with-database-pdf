@@ -1,4 +1,6 @@
+psycopg2-binary
 langchain==0.0.184
+langchain-community
 PyPDF2==3.0.1
 python-dotenv==1.0.0
 streamlit==1.18.1
@@ -7,3 +9,5 @@ htmltemplate
 InstructorEmbedding==1.0.1
 sentence-transformers==2.2.2
 altair==4
+pgvector
+vertexai

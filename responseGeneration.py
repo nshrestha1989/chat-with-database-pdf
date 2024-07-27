@@ -14,6 +14,7 @@ import vertexai.preview.generative_models as generative_models
 
 import embeddingandInsert
 def generate(messages):
+    print("Generating response")
     vertexai.init(project=os.getenv("GEMINI_PROJECT_ID"), location=os.getenv("GEMINI_LOCATION"))
     model = generative_models.GenerativeModel(
         "gemini-1.5-pro-001",
@@ -31,13 +32,14 @@ def generate(messages):
         generative_models.HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: generative_models.HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
         generative_models.HarmCategory.HARM_CATEGORY_HARASSMENT: generative_models.HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
     }
-    
+    print("Generating response calling api")
     responses = model.generate_content(
         messages,
         generation_config=generation_config,
         safety_settings=safety_settings,
         stream=True,
     )
+    print("Response Generated")
     temp =[]
     for response in responses:
         temp.append(response.text)
@@ -81,7 +83,7 @@ def generate_response(user_input):
         # Function to format messages for GenerativeModel
         def format_messages(query, relevant_passages):
             delimiter = "```"
-            messages = (f"You are a chatbot designed to answer to a dental student who is preparing for adc exam in Australia, you are design to help her pass exam.Give her answer in detail . Here's some relevant information:\n"
+            messages = (f"You are a chatbot designed to answer to a dental student who is preparing for adc exam in Australia, create multiple question and answer based on the prompt and dont give extra information or use your general knowledge . Here's some relevant information:\n"
                         f"If the passage is irrelevant to the answer, you may ignore it.\n"
                         f"QUESTION: '{query}'\n"
                         f"PASSAGES:\n\n{delimiter}\n{relevant_passages}\n{delimiter}\n\n"

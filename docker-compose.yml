@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  streamlit:
+    container_name: python-docker-app
+    build:
+      context: ./
+    ports:
+      - "8080:8501"
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/monterrey-344322-ddc5260c31aa.json
+    volumes:
+      - ./monterrey-344322-ddc5260c31aa.json:/app/monterrey-344322-ddc5260c31aa.json
+    restart: unless-stopped
+    networks:
+      - default
+
+  db:
+    build:
+      context: ./postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - '5433:5432'
+    volumes: 
+      - db:/var/lib/postgresql/data
+    networks:
+      - default
+
+volumes:
+  db:
+    driver: local
+
+networks:
+  default:
+    driver: bridge
