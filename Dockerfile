@@ -13,10 +13,10 @@ RUN pip install -U pip && pip install -r requirements.txt
 COPY . .
 
 # Copy the service account key file into the container
-COPY ./monterrey-344322-ddc5260c31aa.json /app/service-account-file.json
+COPY Credential.json /app/Credential.json
 
 # Set environment variable for Google Cloud SDK
-ENV GOOGLE_APPLICATION_CREDENTIALS="./monterrey-344322-ddc5260c31aa.json"
+ENV GOOGLE_APPLICATION_CREDENTIALS="Credential.json"
 # Expose ports
 EXPOSE 8080
 EXPOSE 8501

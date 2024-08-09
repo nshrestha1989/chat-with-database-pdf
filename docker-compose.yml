@@ -8,9 +8,9 @@ services:
     ports:
       - "8080:8501"
     environment:
-      - GOOGLE_APPLICATION_CREDENTIALS=/app/monterrey-344322-ddc5260c31aa.json
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/Credential.json.json
     volumes:
-      - ./monterrey-344322-ddc5260c31aa.json:/app/monterrey-344322-ddc5260c31aa.json
+      - ./Credential.json:/app/Credential.json
     restart: unless-stopped
     networks:
       - default
